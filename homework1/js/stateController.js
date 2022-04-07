@@ -212,6 +212,10 @@ var StateController = function ( dispParams ) {
 		} else {
 
 			// Rotation
+			const new_x_rotation = _this.state.modelRotation.x + movement.y;
+			const new_y_rotation = _this.state.modelRotation.y + movement.x;
+			_this.state.modelRotation.setX(new_x_rotation);
+			_this.state.modelRotation.setY(new_y_rotation);
 
 		}
 
