@@ -240,10 +240,16 @@ var StateController = function ( dispParams ) {
 		if ( ! ctrlKey ) {
 
 			// XY translation
+			const new_x = _this.state.viewerPosition.x + movement.x;
+			const new_y = _this.state.viewerPosition.y - movement.y;
+			_this.state.viewerPosition.setX(new_x);
+			_this.state.viewerPosition.setY(new_y);
 
 		} else {
 
 			// Z translation
+			const new_z = _this.state.viewerPosition.z - movement.y;
+			_this.state.viewerPosition.setZ(new_z);
 
 		}
 
