@@ -71,12 +71,28 @@ var MVPmat = function ( dispParams ) {
 	function computeViewTransform( state ) {
 
 		/* TODO (2.2.3) Implement View Transform */
+		const eye = state.viewerPosition.clone();
+		const center = state.viewerTarget.clone();
+		const up = new THREE.Vector3(0, 1, 0);
 
-		return new THREE.Matrix4().set(
-			1, 0, 0, 0,
-			0, 1, 0, 0,
-			0, 0, 1, - 800,
-			0, 0, 0, 1 );
+		const z_c_unnormalized = new THREE.Vector3().subVectors(eye, center);
+		const z_c = z_c_unnormalized.clone().divideScalar(z_c_unnormalized.length());
+
+		const x_c_unnormalized = new THREE.Vector3().crossVectors(up, z_c);
+		const x_c = x_c_unnormalized.clone().divideScalar(x_c_unnormalized.length());
+
+		const y_c = new THREE.Vector3().crossVectors(z_c, x_c);
+
+		const rotation = new THREE.Matrix4().set(
+			x_c.x, x_c.y, x_c.z, 0,
+			y_c.x, y_c.y, y_c.z, 0,
+			z_c.x, z_c.y, z_c.z, 0,
+			0, 0, 0, 1
+		);
+
+		const translation = new THREE.Matrix4().makeTranslation(-eye.x, -eye.y, -eye.z);
+
+		return new THREE.Matrix4().multiplyMatrices(rotation, translation);
 
 	}
 
