@@ -119,8 +119,19 @@ var MVPmat = function ( dispParams ) {
 		left, right, top, bottom, clipNear, clipFar ) {
 
 		/* TODO (2.3.2) Implement Orthographic Projection */
+		const P_11 = 2 / (right - left);
+		const P_14 = - (right + left) / (right - left);
+		const P_22 = 2 / (top - bottom);
+		const P_24 = - (top + bottom) / (top - bottom);
+		const P_33 = - 2 / (clipFar - clipNear);
+		const P_34 = - (clipFar + clipNear) / (clipFar - clipNear);
 
-		return new THREE.Matrix4();
+		return new THREE.Matrix4().set(
+			P_11, 0, 0, P_14,
+			0, P_22, 0, P_24,
+			0, 0, P_33, P_34,
+			0, 0, 0, 1
+		);
 
 	}
 
