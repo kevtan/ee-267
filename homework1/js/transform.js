@@ -46,11 +46,18 @@ var MVPmat = function ( dispParams ) {
 	function computeModelTransform( state ) {
 
 		/* TODO (2.1.1.3) Matrix Update / (2.1.2) Model Rotation  */
+		const x_rotation_radians = THREE.MathUtils.degToRad(state.modelRotation.x);
+		const y_rotation_radians = THREE.MathUtils.degToRad(state.modelRotation.y);
+		const x_rotation = new THREE.Matrix4().makeRotationX(x_rotation_radians);
+		const y_rotation = new THREE.Matrix4().makeRotationY(y_rotation_radians);
+		const rotation = y_rotation.premultiply(x_rotation);
+
 		const x = state.modelTranslation.x;
 		const y = state.modelTranslation.y;
 		const z = state.modelTranslation.z;
+		const translation = new THREE.Matrix4().makeTranslation(x, y, z);
 
-		return new THREE.Matrix4().makeTranslation(x, y, z);
+		return rotation.premultiply(translation);
 
 	}
 
