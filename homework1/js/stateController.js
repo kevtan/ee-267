@@ -274,10 +274,16 @@ var StateController = function ( dispParams ) {
 		if ( ! ctrlKey ) {
 
 			// XY translation
+			const new_x = _this.state.viewerTarget.x + movement.x;
+			const new_y = _this.state.viewerTarget.y - movement.y;
+			_this.state.viewerTarget.setX(new_x);
+			_this.state.viewerTarget.setY(new_y);
 
 		} else {
 
 			// Z translation
+			const new_z = _this.state.viewerTarget.z - movement.y;
+			_this.state.viewerTarget.setZ(new_z);
 
 		}
 
