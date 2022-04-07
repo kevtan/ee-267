@@ -92,11 +92,17 @@ var MVPmat = function ( dispParams ) {
 		left, right, top, bottom, clipNear, clipFar ) {
 
 		/* TODO (2.3.1) Implement Perspective Projection */
+		const P_11 = (2 * clipNear) / (right - left);
+		const P_13 = (right + left) / (right - left);
+		const P_22 = (2 * clipNear) / (top - bottom);
+		const P_23 = (top + bottom) / (top - bottom);
+		const P_33 = - (clipFar + clipNear) / (clipFar - clipNear);
+		const P_34 = - (2 * clipFar * clipNear) / (clipFar - clipNear);
 
 		return new THREE.Matrix4().set(
-			6.7, 0, 0, 0,
-			0, 6.5, 0, 0,
-			0, 0, - 1.0, - 2.0,
+			P_11, 0, P_13, 0,
+			0, P_22, P_23, 0,
+			0, 0, P_33, P_34,
 			0, 0, - 1.0, 0 );
 
 	}
