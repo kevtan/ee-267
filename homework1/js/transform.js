@@ -46,8 +46,11 @@ var MVPmat = function ( dispParams ) {
 	function computeModelTransform( state ) {
 
 		/* TODO (2.1.1.3) Matrix Update / (2.1.2) Model Rotation  */
+		const x = state.modelTranslation.x;
+		const y = state.modelTranslation.y;
+		const z = state.modelTranslation.z;
 
-		return new THREE.Matrix4();
+		return new THREE.Matrix4().makeTranslation(x, y, z);
 
 	}
 
