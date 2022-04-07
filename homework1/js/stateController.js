@@ -299,6 +299,10 @@ var StateController = function ( dispParams ) {
 	function updateProjectionParams( e, movement ) {
 
 		/* TODO (2.3.1) Implement Perspective Transform */
+		const unclamped_clipNear = _this.state.clipNear - movement.y;
+		const clamped_clipNear = unclamped_clipNear < 1 ? 1 : unclamped_clipNear;
+		_this.state.clipNear = clamped_clipNear;
+		console.log(_this.state.clipNear);
 
 	}
 
