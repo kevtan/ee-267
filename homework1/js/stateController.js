@@ -197,10 +197,16 @@ var StateController = function ( dispParams ) {
 		if ( e.shiftKey && ! ctrlKey ) {
 
 			// XY translation
+			const new_x = _this.state.modelTranslation.x + movement.x;
+			const new_y = _this.state.modelTranslation.y - movement.y;
+			_this.state.modelTranslation.setX(new_x);
+			_this.state.modelTranslation.setY(new_y);
 
 		} else if ( ! e.shiftKey && ctrlKey ) {
 
 			// Z translation
+			const new_z = _this.state.modelTranslation.z - movement.y;
+			_this.state.modelTranslation.setZ(new_z);
 
 
 		} else {
