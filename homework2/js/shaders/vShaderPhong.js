@@ -26,6 +26,8 @@ attribute vec3 position;
 attribute vec3 normal;
 
 void main() {
+	normalCam = normalize(normalMat * normal);
+	fragPosCam = (modelViewMat * vec4(position, 1.0)).xyz;
 
 	gl_Position = projectionMat * modelViewMat * vec4( position, 1.0 );
 
