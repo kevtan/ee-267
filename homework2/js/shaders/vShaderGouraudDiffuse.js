@@ -56,29 +56,42 @@ attribute vec3 normal;
 
 
 void main() {
+	// Transform normal from object to view space
+	vec3 normalInViewSpace = normalize(normalMat * normal);
+
+	// Transform position from object to view space
+	vec3 positionInViewSpace = (modelViewMat * vec4(position, 1.0)).xyz;
 
 	// Compute ambient reflection
 	vec3 ambientReflection = material.ambient * ambientLightColor;
 
-	// Compute diffuse reflection
-	vec3 normalInViewSpace = normalize(normalMat * normal);
-	vec3 lightInViewSpace = (viewMat * vec4(pointLights[0].position, 1.0)).xyz;
-	vec3 positionInViewSpace = (modelViewMat * vec4(position, 1.0)).xyz;
-	vec3 displacementInViewSpace = lightInViewSpace - positionInViewSpace;
-	vec3 L = normalize(displacementInViewSpace);
-	float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
-	vec3 diffuseReflection = (material.diffuse * pointLights[0].color) * angularAdjustment;
+	// Accumulators
+	vec3 totalDiffuseReflection = vec3(0);
 
-	// Compute the distance
-	float distance = length(displacementInViewSpace);
+	for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
 
-	// Compute attenuation factor
-	float k_c = attenuation.x;
-	float k_l = attenuation.y;
-	float k_q = attenuation.z;
-	float attenuationFactor = 1.0 / (k_c + k_l * distance + k_q * pow(distance, 2.0));
+		// Compute diffuse reflection
+		vec3 lightInViewSpace = (viewMat * vec4(pointLights[i].position, 1.0)).xyz;
+		vec3 displacementInViewSpace = lightInViewSpace - positionInViewSpace;
+		vec3 L = normalize(displacementInViewSpace);
+		float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
+		vec3 diffuseReflection = (material.diffuse * pointLights[i].color) * angularAdjustment;
+	
+		// Compute the distance
+		float distance = length(displacementInViewSpace);
+	
+		// Compute attenuation factor
+		float k_c = attenuation.x;
+		float k_l = attenuation.y;
+		float k_q = attenuation.z;
+		float attenuationFactor = 1.0 / (k_c + k_l * distance + k_q * pow(distance, 2.0));
 
-	vColor = ambientReflection + attenuationFactor * diffuseReflection;
+		// Update accumulators
+		totalDiffuseReflection += attenuationFactor * diffuseReflection;
+
+	}
+
+	vColor = ambientReflection + totalDiffuseReflection;
 
 	gl_Position =
 		projectionMat * modelViewMat * vec4( position, 1.0 );
