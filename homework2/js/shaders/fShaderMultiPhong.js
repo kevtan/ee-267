@@ -80,6 +80,7 @@ void main() {
 	vec3 totalDiffuseReflection = vec3(0);
 	vec3 totalSpecularReflection = vec3(0);
 
+	// Superimpose point lights
 	for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
 
 		// Compute diffuse reflection
@@ -107,6 +108,26 @@ void main() {
 		// Update accumulators
 		totalDiffuseReflection += attenuationFactor * diffuseReflection;
 		totalSpecularReflection += attenuationFactor * specularReflection;
+
+	}
+
+	// Superimpose directional lights
+	for (int i = 0; i < NUM_DIR_LIGHTS; i++) {
+
+		// Compute diffuse reflection
+		vec3 L = normalize((viewMat * -vec4(directionalLights[i].direction, 1.0)).xyz);
+		float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
+		vec3 diffuseReflection = (material.diffuse * directionalLights[i].color) * angularAdjustment;
+
+		// Compute specular reflection
+		vec3 R = reflect(-L, normalInViewSpace);
+		vec3 V = normalize(-positionInViewSpace);
+		float vantageAdjustment = pow(max(dot(R, V), 0.0), material.shininess);
+		vec3 specularReflection = (material.specular * directionalLights[i].color) * vantageAdjustment;
+
+		// Update accumulators
+		totalDiffuseReflection += diffuseReflection;
+		totalSpecularReflection += specularReflection;
 
 	}
 
