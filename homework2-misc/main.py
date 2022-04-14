@@ -1,7 +1,8 @@
 import numpy as np
 from termcolor import cprint
+from typing import Tuple
 
-WIDTH = 5
+WIDTH = 6
 HEIGHT = 6
 T_1 = -6 / 5
 T_2 = -22 / 5
@@ -12,8 +13,8 @@ PROJECTION_MATRIX = np.array(
 
 
 def window_to_ndc(
-    window: tuple[float, float, float], w: int, h: int
-) -> tuple[float, float, float]:
+    window: Tuple[float, float, float], w: int, h: int
+) -> Tuple[float, float, float]:
     x_window, y_window, z_window = window
     x_ndc = (2 * x_window) / w - 1
     y_ndc = (2 * y_window) / h - 1
@@ -22,8 +23,8 @@ def window_to_ndc(
 
 
 def ndc_to_clip(
-    ndc: tuple[float, float, float], T1: float, T2: float, E1: float
-) -> tuple[float, float, float, float]:
+    ndc: Tuple[float, float, float], T1: float, T2: float, E1: float
+) -> Tuple[float, float, float, float]:
     x_ndc, y_ndc, z_ndc = ndc
     w_clip = T2 / (z_ndc - (T1 / E1))
     x_clip = x_ndc * w_clip
@@ -33,7 +34,7 @@ def ndc_to_clip(
 
 
 def clip_to_view(
-    clip: tuple[float, float, float, float], projection_matrix: np.ndarray
+    clip: Tuple[float, float, float, float], projection_matrix: np.ndarray
 ):
     inverse_projection_matrix = np.linalg.inv(projection_matrix)
     return inverse_projection_matrix @ clip
