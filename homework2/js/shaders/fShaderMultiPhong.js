@@ -115,7 +115,7 @@ void main() {
 	for (int i = 0; i < NUM_DIR_LIGHTS; i++) {
 
 		// Compute diffuse reflection
-		vec3 L = normalize((viewMat * -vec4(directionalLights[i].direction, 1.0)).xyz);
+		vec3 L = normalize((viewMat * -vec4(directionalLights[i].direction, 0.0)).xyz);
 		float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
 		vec3 diffuseReflection = (material.diffuse * directionalLights[i].color) * angularAdjustment;
 
