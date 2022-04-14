@@ -53,11 +53,50 @@ uniform vec3 ambientLightColor;
 
 
 void main() {
+	// Re-normalize normal
+	vec3 normalInViewSpace = normalize(normalCam);
+
+	// Alias position for code compatibility
+	vec3 positionInViewSpace = fragPosCam;
 
 	// Compute ambient reflection
 	vec3 ambientReflection = material.ambient * ambientLightColor;
 
-	vec3 fColor = ambientReflection;
+	// Accumulators
+	vec3 totalDiffuseReflection = vec3(0);
+	vec3 totalSpecularReflection = vec3(0);
+
+	for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
+
+		// Compute diffuse reflection
+		vec3 lightInViewSpace = (viewMat * vec4(pointLights[i].position, 1.0)).xyz;
+		vec3 displacementInViewSpace = lightInViewSpace - positionInViewSpace;
+		vec3 L = normalize(displacementInViewSpace);
+		float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
+		vec3 diffuseReflection = (material.diffuse * pointLights[i].color) * angularAdjustment;
+
+		// Compute specular reflection
+		vec3 R = reflect(-L, normalInViewSpace);
+		vec3 V = normalize(-positionInViewSpace);
+		float vantageAdjustment = pow(max(dot(R, V), 0.0), material.shininess);
+		vec3 specularReflection = (material.specular * pointLights[i].color) * vantageAdjustment;
+
+		// Compute the distance
+		float distance = length(displacementInViewSpace);
+
+		// Compute attenuation factor
+		float k_c = attenuation.x;
+		float k_l = attenuation.y;
+		float k_q = attenuation.z;
+		float attenuationFactor = 1.0 / (k_c + k_l * distance + k_q * pow(distance, 2.0));
+
+		// Update accumulators
+		totalDiffuseReflection += attenuationFactor * diffuseReflection;
+		totalSpecularReflection += attenuationFactor * specularReflection;
+
+	}
+
+	vec3 fColor = ambientReflection + totalDiffuseReflection + totalSpecularReflection;
 
 	gl_FragColor = vec4( fColor, 1.0 );
 
