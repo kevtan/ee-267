@@ -69,7 +69,16 @@ void main() {
 	float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
 	vec3 diffuseReflection = (material.diffuse * pointLights[0].color) * angularAdjustment;
 
-	vColor = ambientReflection + diffuseReflection;
+	// Compute the distance
+	float distance = length(displacementInViewSpace);
+
+	// Compute attenuation factor
+	float k_c = attenuation.x;
+	float k_l = attenuation.y;
+	float k_q = attenuation.z;
+	float attenuationFactor = 1.0 / (k_c + k_l * distance + k_q * pow(distance, 2.0));
+
+	vColor = ambientReflection + attenuationFactor * diffuseReflection;
 
 	gl_Position =
 		projectionMat * modelViewMat * vec4( position, 1.0 );
