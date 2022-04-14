@@ -72,7 +72,7 @@ void main() {
 	// Compute specular reflection
 	vec3 R = reflect(-L, normalInViewSpace);
 	vec3 V = normalize(-positionInViewSpace);
-	float vantageAdjustment = max(dot(R, V), 0.0);
+	float vantageAdjustment = pow(max(dot(R, V), 0.0), material.shininess);
 	vec3 specularReflection = (material.specular * pointLights[0].color) * vantageAdjustment;
 
 	// Compute the distance
