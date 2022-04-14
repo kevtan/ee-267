@@ -69,6 +69,12 @@ void main() {
 	float angularAdjustment = max(dot(L, normalInViewSpace), 0.0);
 	vec3 diffuseReflection = (material.diffuse * pointLights[0].color) * angularAdjustment;
 
+	// Compute specular reflection
+	vec3 R = reflect(-L, normalInViewSpace);
+	vec3 V = normalize(-positionInViewSpace);
+	float vantageAdjustment = max(dot(R, V), 0.0);
+	vec3 specularReflection = (material.specular * pointLights[0].color) * vantageAdjustment;
+
 	// Compute the distance
 	float distance = length(displacementInViewSpace);
 
@@ -78,7 +84,7 @@ void main() {
 	float k_q = attenuation.z;
 	float attenuationFactor = 1.0 / (k_c + k_l * distance + k_q * pow(distance, 2.0));
 
-	vColor = ambientReflection + attenuationFactor * diffuseReflection;
+	vColor = ambientReflection + attenuationFactor * (diffuseReflection + specularReflection);
 
 	gl_Position =
 		projectionMat * modelViewMat * vec4( position, 1.0 );
