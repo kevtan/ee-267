@@ -50,11 +50,45 @@ uniform float middleBlurKernel[int(middleKernelRad)*2+1];
 // gaussian blur kernel for outer layer (9x9)
 uniform float outerBlurKernel[int(outerKernelRad)*2+1];
 
+vec2 windowCoordsToTextureCoords(vec2 windowCoords) {
+	return windowCoords / windowSize;
+}
 
 void main() {
 
-	gl_FragColor = texture2D( textureMap,  textureCoords );
+	// Compute this fragment's eccentricity
+	vec2 windowCoords = textureCoords * windowSize;
+	float pixelDistance = distance(gazePosition, windowCoords);
+	float eccentricity = pixelDistance * pixelVA;
 
+	if (eccentricity < e1) {
+		// Foveal Layer
+		gl_FragColor = texture2D(textureMap,  textureCoords);	
+	} else if (eccentricity < e2) {
+		// Middle Layer
+		vec4 blurredColor = vec4(0);
+		for (int i = -int(middleKernelRad); i <= int(middleKernelRad); i++) {
+			for (int j = -int(middleKernelRad); j <= int(middleKernelRad); j++) {
+				vec2 _windowCoords = windowCoords + vec2(i, j);
+				vec2 _textureCoords = windowCoordsToTextureCoords(_windowCoords);
+				vec4 _color = texture2D(textureMap, _textureCoords);
+				blurredColor += _color * middleBlurKernel[i + int(middleKernelRad)] * middleBlurKernel[j + int(middleKernelRad)];
+			}
+		}
+		gl_FragColor = blurredColor;
+	} else {
+		// Outer Layer
+		vec4 blurredColor = vec4(0);
+		for (int i = -int(outerKernelRad); i <= int(outerKernelRad); i++) {
+			for (int j = -int(outerKernelRad); j <= int(outerKernelRad); j++) {
+				vec2 _windowCoords = windowCoords + vec2(i, j);
+				vec2 _textureCoords = windowCoordsToTextureCoords(_windowCoords);
+				vec4 _color = texture2D(textureMap, _textureCoords);
+				blurredColor += _color * outerBlurKernel[i + int(outerKernelRad)] * outerBlurKernel[j + int(outerKernelRad)];
+			}
+		}
+		gl_FragColor = blurredColor;
+	}
 }
 ` );
 
