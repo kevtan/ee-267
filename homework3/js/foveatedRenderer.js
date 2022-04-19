@@ -37,10 +37,10 @@ var FoveatedRenderer = function ( webglRenderer, dispParams ) {
 		dispParams.pixelPitch, dispParams.distanceScreenViewer );
 
 	// Eccentricity angle at which a 4x reduction in resolution is imperceivable
-	var e1 = computeEcc( /* TODO (2.2.3) */ );
+	var e1 = computeEcc(8 * pixelVA);
 
 	// Eccentricity angle at which a 8x reduction in resolution is imperceivable
-	var e2 = computeEcc( /* TODO (2.2.3) */ );
+	var e2 = computeEcc(16 * pixelVA);
 
 	var material = new THREE.RawShaderMaterial( {
 
