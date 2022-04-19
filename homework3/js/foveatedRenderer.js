@@ -100,8 +100,10 @@ var FoveatedRenderer = function ( webglRenderer, dispParams ) {
 	function computePixelVA( pixelPitch, distanceScreenViewer ) {
 
 		/* TODO (2.2.1) Visual Angle of a Pixel */
+		const visualAnglePerPixelInRadians = Math.atan(pixelPitch / distanceScreenViewer);
+		const visualAnglePerPixelInDegrees = visualAnglePerPixelInRadians * (180 / Math.PI);
 
-		return 0;
+		return visualAnglePerPixelInDegrees;
 
 	}
 
