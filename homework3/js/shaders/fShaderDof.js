@@ -46,6 +46,27 @@ uniform float pixelPitch;
 
 const float searchRad = 11.0;
 
+vec2 textureCoordsToWindowCoords(vec2 textureCoords) {
+	return textureCoords * windowSize;
+}
+
+vec3 windowCoordsToNDC(vec3 windowCoords) {
+	float width = windowSize.x;
+	float height = windowSize.y;
+	float x = ((2.0 * windowCoords.x) / width) - 1.0;
+	float y = ((2.0 * windowCoords.y) / height) - 1.0;
+	float z = (2.0 * windowCoords.z) - 1.0;
+	return vec3(x, y, z);
+}
+
+vec4 NDCToClipCoords(vec3 ndc) {
+	float w = projectionMat[2][3] / (ndc.z + projectionMat[2][2]);
+	return vec4(ndc * w, w);
+}
+
+vec4 clipCoordsToViewCoords(vec4 clipCoords) {
+	return invProjectionMat * clipCoords;
+}
 
 // Compute the distance to fragment in [mm]
 // p: texture coordinate of a fragment / a gaze position
@@ -54,8 +75,14 @@ const float searchRad = 11.0;
 float distToFrag( vec2 p ) {
 
 	/* TODO (2.3.1) Distance to Fragment */
+	vec2 xyWindow = textureCoordsToWindowCoords(p);
+	float zWindow = texture2D(depthMap, p).x;
+	vec3 windowCoords = vec3(xyWindow, zWindow);
+	vec3 ndc = windowCoordsToNDC(windowCoords);
+	vec4 clipCoords = NDCToClipCoords(ndc);
+	vec4 viewCoords = clipCoordsToViewCoords(clipCoords);
 
-	return 0.0;
+	return length(viewCoords.xyz);
 
 }
 
