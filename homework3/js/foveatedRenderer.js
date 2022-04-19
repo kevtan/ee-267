@@ -118,8 +118,10 @@ var FoveatedRenderer = function ( webglRenderer, dispParams ) {
 	function computeEcc( mar ) {
 
 		/* TODO (2.2.2) Eccentricity for some MAR */
+		const OMEGA_NOUGHT = 1 / 48;
+		const M = 0.0275;
 
-		return 0;
+		return (mar - OMEGA_NOUGHT) / M;
 
 	}
 
