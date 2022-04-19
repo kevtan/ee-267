@@ -91,6 +91,8 @@ var FoveatedRenderer = function ( webglRenderer, dispParams ) {
 
 	// A function to computes the visual angle per pixel
 	//
+	// Assumes that the viewer is looking at the middle of the pixel on the monitor.
+	//
 	// INPUT
 	// pixelPitch: pixel pitch of your monitor in [mm]
 	// distanceScreenViewer: distance between the viewer and the monitor
@@ -100,7 +102,7 @@ var FoveatedRenderer = function ( webglRenderer, dispParams ) {
 	function computePixelVA( pixelPitch, distanceScreenViewer ) {
 
 		/* TODO (2.2.1) Visual Angle of a Pixel */
-		const visualAnglePerPixelInRadians = Math.atan(pixelPitch / distanceScreenViewer);
+		const visualAnglePerPixelInRadians = 2 * Math.atan((pixelPitch / 2) / distanceScreenViewer);
 		const visualAnglePerPixelInDegrees = visualAnglePerPixelInRadians * (180 / Math.PI);
 
 		return visualAnglePerPixelInDegrees;
