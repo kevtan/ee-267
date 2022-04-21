@@ -67,10 +67,11 @@ var MVPmat = function ( dispParams ) {
 	function computeViewTransform( state, halfIpdShift ) {
 
 		/* TODO (2.4.1) View Matrix Computation - Update this function! */
+		var offset = new THREE.Vector3(halfIpdShift, 0, 0);
 
-		var viewerPosition = state.viewerPosition;
+		var viewerPosition = new THREE.Vector3().subVectors(state.viewerPosition, offset);
 
-		var viewerTarget = state.viewerTarget;
+		var viewerTarget = new THREE.Vector3().subVectors(state.viewerTarget, offset);
 
 		var viewerUp = new THREE.Vector3( 0, 1, 0 );
 
