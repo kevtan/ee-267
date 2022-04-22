@@ -103,14 +103,35 @@ float computeCoC( float fragDist, float focusDist ) {
 vec3 computeBlur() {
 
 	/* TODO (2.3.3) Retinal Blur */
+	vec2 windowCoords = textureCoords * windowSize;
 
-	return vec3( 0.0 );
+	// Compute the circle of confusion
+	float fragDist = distToFrag(textureCoords);
+	float focusDist = distToFrag(gazePosition / windowSize);
+	float c_mm = computeCoC(fragDist, focusDist);
+	float c_pixels = c_mm / pixelPitch;
+
+	// Compute the blurred color
+	vec3 colorAccumulator = vec3(0);
+	int nPixels = 0;
+	for (int i = -int(searchRad); i <= int(searchRad); i++) {
+		for (int j = -int(searchRad); j <= int(searchRad); j++) {
+			vec2 _windowCoords = windowCoords + vec2(i, j);
+			if (distance(_windowCoords, windowCoords) > c_pixels) continue;
+			vec2 _textureCoords = _windowCoords / windowSize;
+			vec3 _color = texture2D(textureMap, _textureCoords).xyz;
+			colorAccumulator += _color;
+			nPixels += 1;
+		}
+	}
+
+	return colorAccumulator / float(nPixels);
 }
 
 
 void main() {
 
-	gl_FragColor = texture2D( textureMap,  textureCoords );
+	gl_FragColor = vec4(computeBlur(), 1);
 
 }
 ` );
