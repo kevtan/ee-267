@@ -94,7 +94,7 @@ float computeCoC( float fragDist, float focusDist ) {
 
 	/* TODO (2.3.2) Circle of Confusion Computation */
 
-	return 0.0;
+	return (abs(focusDist - fragDist) / focusDist) * pupilDiameter;
 
 }
 
