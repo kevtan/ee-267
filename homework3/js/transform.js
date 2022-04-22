@@ -151,11 +151,8 @@ var MVPmat = function ( dispParams ) {
 			/* TODO (2.4.2) Projection Matrix Computation */
 
 			// Compute projection matrix
-			var right =
-				( dispParams.canvasWidth * dispParams.pixelPitch / 2 )
-					* ( state.clipNear / dispParams.distanceScreenViewer );
-
-			var left = - right;
+			var lengthBig = ((dispParams.canvasWidth * dispParams.pixelPitch + dispParams.ipd) / 2) * (state.clipNear / dispParams.distanceScreenViewer);
+			var lengthSmall = ((dispParams.canvasWidth * dispParams.pixelPitch - dispParams.ipd) / 2) * (state.clipNear / dispParams.distanceScreenViewer);
 
 			var top =
 				( dispParams.canvasHeight * dispParams.pixelPitch / 2 )
@@ -164,10 +161,10 @@ var MVPmat = function ( dispParams ) {
 			var bottom = - top;
 
 			this.anaglyphProjectionMat.L = computePerspectiveTransform(
-				left, right, top, bottom, state.clipNear, state.clipFar );
+				-lengthSmall, lengthBig, top, bottom, state.clipNear, state.clipFar );
 
 			this.anaglyphProjectionMat.R = computePerspectiveTransform(
-				left, right, top, bottom, state.clipNear, state.clipFar );
+				-lengthBig, lengthSmall, top, bottom, state.clipNear, state.clipFar );
 
 		}
 
