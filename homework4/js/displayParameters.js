@@ -40,7 +40,7 @@ var DisplayParameters = function () {
 	// Horizontal resolution of the current window in [pixel]
 	this.canvasWidth = window.innerWidth;
 
-	// Interpupillnary distance in [mm]
+	// Interpupillary distance in [mm]
 	this.ipd = 64;
 
 	// distance between lens and screen in [mm]
