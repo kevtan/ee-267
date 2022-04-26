@@ -71,7 +71,7 @@ var DisplayParameters = function () {
 
 		/* TODO (2.1.1) Calculating Parameters of the Magnified Virtual Screen Image */
 
-		return 1;
+		return focalLength / (focalLength - this.distLensScreen);
 
 	}
 
