@@ -39,8 +39,22 @@ uniform float distLensScreen;
 
 void main() {
 
-	gl_FragColor = texture2D( map, textureCoords );
+	// Compute the un-normalized distance.
+	float r_tilde = length((textureCoords - centerCoordinate) * viewportSize);
 
+	// Compute the normalized distance.
+	float r = r_tilde / distLensScreen;
+
+	// Compute the distorted coordinates.
+	float distortionFactor = 1.0 + K.x * pow(r, 2.0) + K.y * pow(r, 4.0);
+	vec2 distortedCoords = ((textureCoords - centerCoordinate) * distortionFactor) + centerCoordinate;
+
+	// Assign color.
+	if (distortedCoords.x < 0.0 || distortedCoords.x > 1.0 || distortedCoords.y < 0.0 || distortedCoords.y > 1.0) {
+		gl_FragColor = vec4(0, 0, 0, 1);
+	} else {
+		gl_FragColor = texture2D(map, distortedCoords);
+	}
 }
 ` );
 
