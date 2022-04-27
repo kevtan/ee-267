@@ -126,9 +126,6 @@ var StereoUnwarpRenderer = function ( webglRenderer, dispParams ) {
 	}
 
 
-	// A function to compute frustum parameters for stereo rendering.
-	// Returns top/bottom/left/right values for left and right eyes.
-	//
 	// OUTPUT:
 	// (L) center coordinates for the left eye as THREE.Vector2 (in texture (u,v) coordinates)
 	// (R) center coordinates for the right eye as THREE.Vector2 (in texture (u,v) coordinates)
