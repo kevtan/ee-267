@@ -135,10 +135,12 @@ var StereoUnwarpRenderer = function ( webglRenderer, dispParams ) {
 	// The default values are wrong. Replace them.
 	// All the parameters you need for your calculations are found in the function arguments.
 	function computeCenterCoord( dispParams ) {
+		const microdisplayWidth = dispParams.canvasWidth * dispParams.pixelPitch;
+		const offset = (dispParams.ipd / 2) / (microdisplayWidth / 2);
 
-		var centerCoordL = new THREE.Vector2( 0, 0 );
+		var centerCoordL = new THREE.Vector2(1 - offset, 0.5);
 
-		var centerCoordR = new THREE.Vector2( 0, 0 );
+		var centerCoordR = new THREE.Vector2(offset, 0.5);
 
 		return { L: centerCoordL, R: centerCoordR };
 
