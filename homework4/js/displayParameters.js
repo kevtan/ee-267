@@ -47,7 +47,7 @@ var DisplayParameters = function () {
 	this.distLensScreen = 39;
 
 	// Pixel pitch of the screen in [mm/px]
-	this.pixelPitch = screenWidth / 1920; // 1920: external monitor resolution in [pixels]
+	this.pixelPitch = screenWidth / 2560; // 2560: external monitor resolution in [pixels]
 
 	// Magnification of the lens
 	this.lensMagnification = computeLensMagnification();
