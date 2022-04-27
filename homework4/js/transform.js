@@ -110,10 +110,19 @@ var MVPmat = function ( dispParams ) {
 	function computeTopBottomLeftRight( clipNear, clipFar, dispParams ) {
 
 		/* TODO (2.1.2) Stereo Rendering */
+		const microdisplayHeight = dispParams.canvasHeight * dispParams.pixelPitch;
+		const virtualImageHeight = dispParams.lensMagnification * microdisplayHeight;
+		const vertical = clipNear * (virtualImageHeight / (2 * dispParams.distanceScreenViewer));
+
+		const w1 = dispParams.lensMagnification * (dispParams.ipd / 2);
+		const microdisplayWidth = dispParams.canvasWidth * dispParams.pixelPitch;
+		const w2 = dispParams.lensMagnification * ((microdisplayWidth - dispParams.ipd) / 2);
+		const horizontal1 = clipNear * (w1 / dispParams.distanceScreenViewer);
+		const horizontal2 = clipNear * (w2 / dispParams.distanceScreenViewer);
 
 		return {
-			topL: 80, bottomL: - 80, leftL: - 80, rightL: 80,
-			topR: 80, bottomR: - 80, leftR: - 80, rightR: 80,
+			topL: vertical, bottomL: -vertical, leftL: -horizontal2, rightL: horizontal1,
+			topR: vertical, bottomR: -vertical, leftR: -horizontal1, rightR: horizontal2,
 		};
 
 	}
