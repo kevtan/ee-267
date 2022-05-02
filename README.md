@@ -28,3 +28,5 @@ git pull origin master
 ## Repository Organization
 
 Everything submitted for homework n is contained in the `homework<n>` folder. However, because we were asked to keep the submissions clean (i.e., free from any extra files), there's a `homework<n>-misc` companion folder for every homework that contains related files like preparation lab PDFs, homework instruction PDFs, utility code, etc.
+
+> Inside the `homework<n>-misc` directory, there's a password-protected `hw<n>_solutions.pdf` file. The password for this file is `EE267_2022`.
