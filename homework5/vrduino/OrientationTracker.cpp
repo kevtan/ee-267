@@ -191,17 +191,21 @@ bool OrientationTracker::updateImuVariables() {
   //update:
   //previousTimeImu (in seconds)
   //deltaT (in seconds)
+  double currentTimeImu = micros() / 1000000;
+  deltaT = currentTimeImu - previousTimeImu;
+  previousTimeImu = currentTimeImu;
 
   //read imu.gyrX, imu.accX ...
   //update:
   //gyr[0], ...
   //acc[0], ...
 
-  // You also need to appropriately modify the update of gyr as instructed in (2.1.3).
-  gyr[0] = imu.gyrX;
-  gyr[1] = imu.gyrY;
-  gyr[2] = imu.gyrZ;
+  // Export the gyroscope measurements (adjusting for bias)
+  gyr[0] = imu.gyrX - gyrBias[0];
+  gyr[1] = imu.gyrY - gyrBias[1];
+  gyr[2] = imu.gyrZ - gyrBias[2];
 
+  // Export the accelerometer measurements
   acc[0] = imu.accX;
   acc[1] = imu.accY;
   acc[2] = imu.accZ;
