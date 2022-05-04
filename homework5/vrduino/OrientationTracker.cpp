@@ -45,9 +45,68 @@ void OrientationTracker::measureImuBiasVariance() {
   //accBias[0], accBias[1], accBias[2]
   //accVariance[0], accBias[1], accBias[2]
 
+  const int N_MEASUREMENTS = 1000;
 
+  double gyrX_samples[N_MEASUREMENTS];
+  double gyrY_samples[N_MEASUREMENTS];
+  double gyrZ_samples[N_MEASUREMENTS];
+  double accX_samples[N_MEASUREMENTS];
+  double accY_samples[N_MEASUREMENTS];
+  double accZ_samples[N_MEASUREMENTS];
 
+  // Take the measurements
 
+  for (int i = 0; i < N_MEASUREMENTS; i++) {
+    while (not imu.read()) {}
+    gyrX_samples[i] = imu.gyrX;
+    gyrY_samples[i] = imu.gyrY;
+    gyrZ_samples[i] = imu.gyrZ;
+    accX_samples[i] = imu.accX;
+    accY_samples[i] = imu.accY;
+    accZ_samples[i] = imu.accZ;
+  }
+
+  // Compute the biases
+
+  double gyrX_sum = 0, gyrY_sum = 0, gyrZ_sum = 0;
+  double accX_sum = 0, accY_sum = 0, accZ_sum = 0;
+
+  for (int i = 0; i < N_MEASUREMENTS; i++) {
+    gyrX_sum += gyrX_samples[i];
+    gyrY_sum += gyrY_samples[i];
+    gyrZ_sum += gyrZ_samples[i];
+    accX_sum += accX_samples[i];
+    accY_sum += accY_samples[i];
+    accZ_sum += accZ_samples[i];
+  }
+
+  gyrBias[0] = gyrX_sum / N_MEASUREMENTS;
+  gyrBias[1] = gyrY_sum / N_MEASUREMENTS;
+  gyrBias[2] = gyrZ_sum / N_MEASUREMENTS;
+  accBias[0] = accX_sum / N_MEASUREMENTS;
+  accBias[1] = accY_sum / N_MEASUREMENTS;
+  accBias[2] = accZ_sum / N_MEASUREMENTS;
+
+  // Compute the variances
+
+  double gyrVarianceX_numerator = 0, gyrVarianceY_numerator = 0, gyrVarianceZ_numerator = 0;
+  double accVarianceX_numerator = 0, accVarianceY_numerator = 0, accVarianceZ_numerator = 0;
+
+  for (int i = 0; i < N_MEASUREMENTS; i++) {
+    gyrVarianceX_numerator += sq(gyrX_samples[i] - gyrBias[0]);
+    gyrVarianceY_numerator += sq(gyrY_samples[i] - gyrBias[1]);
+    gyrVarianceZ_numerator += sq(gyrZ_samples[i] - gyrBias[2]);
+    accVarianceX_numerator += sq(accX_samples[i] - accBias[0]);
+    accVarianceY_numerator += sq(accY_samples[i] - accBias[1]);
+    accVarianceZ_numerator += sq(accZ_samples[i] - accBias[2]);
+  }
+
+  gyrVariance[0] = gyrVarianceX_numerator / (N_MEASUREMENTS - 1);
+  gyrVariance[1] = gyrVarianceY_numerator / (N_MEASUREMENTS - 1);
+  gyrVariance[2] = gyrVarianceZ_numerator / (N_MEASUREMENTS - 1);
+  accVariance[0] = accVarianceX_numerator / (N_MEASUREMENTS - 1);
+  accVariance[1] = accVarianceY_numerator / (N_MEASUREMENTS - 1);
+  accVariance[2] = accVarianceZ_numerator / (N_MEASUREMENTS - 1);
 
 }
 
