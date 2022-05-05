@@ -71,7 +71,11 @@ public:
   /* function to normalize a quaternion */
   Quaternion& normalize() {
 
-    //this->q[0] = ...
+    double norm = length();
+    q[0] /= norm;
+    q[1] /= norm;
+    q[2] /= norm;
+    q[3] /= norm;
 
     return *this;
   }
