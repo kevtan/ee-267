@@ -117,7 +117,8 @@ public:
   /* function to rotate a quaternion by r * q * r^{-1} */
   Quaternion rotate(Quaternion r) {
 
-    return Quaternion();
+    Quaternion r_inv = r.clone().inverse();
+    return multiply(r, multiply(*this, r_inv));
 
   }
 
