@@ -64,7 +64,7 @@ public:
   /* function to compute the length of a quaternion */
   double length() {
 
-    return 0.0;
+    return sqrt(sq(q[0]) + sq(q[1]) + sq(q[2]) + sq(q[3]));
 
   }
 
