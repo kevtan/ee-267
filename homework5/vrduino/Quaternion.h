@@ -102,7 +102,7 @@ public:
   }
 
   /* function to multiply two quaternions */
-  Quaternion multiply(Quaternion a, Quaternion b) {
+  static Quaternion multiply(Quaternion a, Quaternion b) {
 
     Quaternion q;
 
