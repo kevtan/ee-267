@@ -191,7 +191,7 @@ bool OrientationTracker::updateImuVariables() {
   //update:
   //previousTimeImu (in seconds)
   //deltaT (in seconds)
-  double currentTimeImu = micros() / 1000000;
+  double currentTimeImu = ((double) micros()) / 1000000;
   deltaT = currentTimeImu - previousTimeImu;
   previousTimeImu = currentTimeImu;
 
