@@ -80,6 +80,14 @@ public:
     return *this;
   }
 
+  /* function to conjugate a quaternion */
+  Quaternion& conjugate() {
+    q[1] *= -1;
+    q[2] *= -1;
+    q[3] *= -1;
+    return *this;
+  }
+
   /* function to invert a quaternion */
   Quaternion& inverse() {
 
