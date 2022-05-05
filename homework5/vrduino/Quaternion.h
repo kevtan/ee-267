@@ -91,7 +91,12 @@ public:
   /* function to invert a quaternion */
   Quaternion& inverse() {
 
-    //this->q[0] = ...
+    double denominator = sq(length());
+    Quaternion conjugate = clone().conjugate();
+    q[0] = conjugate.q[0] / denominator;
+    q[1] = conjugate.q[1] / denominator;
+    q[2] = conjugate.q[2] / denominator;
+    q[3] = conjugate.q[3] / denominator;
 
     return *this;
   }
