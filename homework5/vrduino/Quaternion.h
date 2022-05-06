@@ -47,10 +47,10 @@ public:
   /* function to construct a quaternion from angle-axis representation. angle is given in degrees. */
   Quaternion& setFromAngleAxis(double angle, double vx, double vy, double vz) {
 
-    double angleInRadians = radians(angle);
+    double _angle = radians(angle / 2);
     
-    double cosine = cos(angleInRadians);
-    double sine = sin(angleInRadians);
+    double cosine = cos(_angle);
+    double sine = sin(_angle);
     
     q[0] = cosine;
     q[1] = vx * sine;
