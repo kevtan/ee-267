@@ -46,7 +46,7 @@ double computeFlatlandRollComp(double flatlandRollCompPrev, double gyr[3], doubl
 /** TODO: see documentation in header file */
 void updateQuaternionGyr(Quaternion& q, double gyr[3], double deltaT) {
 
-  const double ANGULAR_VELOCITY_THRESHOLD = 1e-6;
+  const double ANGULAR_VELOCITY_THRESHOLD = 1e-8;
 
   // Compute the angular velocity
   double angularVelocity = sqrt(sq(gyr[0]) + sq(gyr[1]) + sq(gyr[2]));
@@ -74,5 +74,28 @@ void updateQuaternionComp(Quaternion& q, double gyr[3], double acc[3], double de
   // q is the previous quaternion estimate
   // update it to be the new quaternion estimate
 
+  updateQuaternionGyr(q, gyr, deltaT);
+
+  // Construct acceleration vector quaternion
+  Quaternion accelerationVectorQuaternion{0, acc[0], acc[1], acc[2]};
+  accelerationVectorQuaternion = accelerationVectorQuaternion.rotate(q);
+  accelerationVectorQuaternion.normalize();
+
+  // Find the azimuthal angle
+  double phi = degrees(acos(accelerationVectorQuaternion.q[2]));
+
+  // Find the rotation axis
+  double rotationAxis[3] = {-accelerationVectorQuaternion.q[3], 0, accelerationVectorQuaternion.q[1]};
+  double rotationAxisNorm = sqrt(sq(rotationAxis[0]) + sq(rotationAxis[1]) + sq(rotationAxis[2]));
+  rotationAxis[0] /= rotationAxisNorm;
+  rotationAxis[1] /= rotationAxisNorm;
+  rotationAxis[2] /= rotationAxisNorm;
+
+  // Construct tilt correction quaternion
+  Quaternion tiltCorrectionQuaternion;
+  tiltCorrectionQuaternion.setFromAngleAxis((1 - alpha) * phi, rotationAxis[0], rotationAxis[1], rotationAxis[2]);
+
+  // Perform tilt correction
+  q = Quaternion::multiply(tiltCorrectionQuaternion, q).normalize();
 
 }
