@@ -3,14 +3,20 @@
 /** TODO: see documentation in header file */
 double computeAccPitch(double acc[3]) {
 
-  return 0.0;
+  double acc_magnitude = sqrt(sq(acc[0]) + sq(acc[1]) + sq(acc[2]));
+  double acc_direction[3] = {acc[0] / acc_magnitude, acc[1] / acc_magnitude, acc[2] / acc_magnitude};
+  
+  return -degrees(atan2(acc_direction[2], (acc_direction[1] > 0 ? 1 : (acc_direction[1] < 0 ? -1 : 0)) * sqrt(sq(acc_direction[0]) + sq(acc_direction[1]))));
 
 }
 
 /** TODO: see documentation in header file */
 double computeAccRoll(double acc[3]) {
 
-  return 0.0;
+  double acc_magnitude = sqrt(sq(acc[0]) + sq(acc[1]) + sq(acc[2]));
+  double acc_direction[3] = {acc[0] / acc_magnitude, acc[1] / acc_magnitude, acc[2] / acc_magnitude};
+
+  return -degrees(atan2(-acc_direction[0], acc_direction[1]));
 
 }
 
