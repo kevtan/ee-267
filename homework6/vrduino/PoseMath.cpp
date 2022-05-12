@@ -56,8 +56,33 @@ bool solveForH(double A[8][8], double b[8], double hOut[8]) {
  * TODO: see header file for documentation
  */
 void getRtFromH(double h[8], double ROut[3][3], double pos3DOut[3]) {
+  // Estimate the scale factor
+  double normCol1 = sqrt(sq(h[0]) + sq(h[3]) + sq(h[6]));
+  double normCol2 = sqrt(sq(h[1]) + sq(h[4]) + sq(h[7]));
+  double s = 2 / (normCol1 + normCol2);
 
+  // Estimate the translation
+  pos3DOut[0] = s * h[2];
+  pos3DOut[1] = s * h[5];
+  pos3DOut[2] = -s;
 
+  // Estimate the rotation
+  ROut[0][0] = h[0] / normCol1;
+  ROut[1][0] = h[3] / normCol1;
+  ROut[2][0] = -h[6] / normCol1;
+
+  double dot = ROut[0][0] * h[1] + ROut[1][0] * h[4] - ROut[2][0] * h[7];
+  ROut[0][1] = h[1] - ROut[0][0] * dot;
+  ROut[1][1] = h[4] - ROut[1][0] * dot;
+  ROut[2][1] = -h[7] - ROut[2][0] * dot;
+  double norm = sqrt(sq(ROut[0][1]) + sq(ROut[1][1]) + sq(ROut[2][1]));
+  ROut[0][1] /= norm;
+  ROut[1][1] /= norm;
+  ROut[2][1] /= norm;
+
+  ROut[0][2] = ROut[1][0] * ROut[2][1] - ROut[2][0] * ROut[1][1];
+  ROut[1][2] = ROut[2][0] * ROut[0][1] - ROut[0][0] * ROut[2][1];
+  ROut[2][2] = ROut[0][0] * ROut[1][1] - ROut[1][0] * ROut[0][1];
 }
 
 

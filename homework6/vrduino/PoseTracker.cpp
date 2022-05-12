@@ -86,5 +86,8 @@ int PoseTracker::updatePose() {
   formA(position2D, positionRef, A);
   double h[8];
   if (not solveForH(A, position2D, h)) return false;
+  double R[3][3];
+  getRtFromH(h, R, position);
+  
   return 1;
 }
