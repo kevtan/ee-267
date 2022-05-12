@@ -45,14 +45,10 @@ void formA(double pos2D[8], double posRef[8], double Aout[8][8]) {
  * TODO: see header file for documentation
  */
 bool solveForH(double A[8][8], double b[8], double hOut[8]) {
-  //use Matrix Math library for matrix operations
-  //example:
-  //int inv = Matrix.Invert((double*)A, 8);
-  //if inverse fails (Invert returns 0), return false
-
-
-  return false;
-
+  bool inversionSuccessful = Matrix.Invert((double *) A, 8);
+  if (not inversionSuccessful) return false;
+  Matrix.Multiply((double *) A, b, 8, 8, 1, hOut);
+  return true;
 }
 
 

@@ -84,6 +84,7 @@ int PoseTracker::updatePose() {
   convertTicksTo2DPositions(clockTicks, position2D);
   double A[8][8];
   formA(position2D, positionRef, A);
-
+  double h[8];
+  if (not solveForH(A, position2D, h)) return false;
   return 1;
 }
