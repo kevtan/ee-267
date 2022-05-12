@@ -88,6 +88,7 @@ int PoseTracker::updatePose() {
   if (not solveForH(A, position2D, h)) return false;
   double R[3][3];
   getRtFromH(h, R, position);
+  quaternionHm = getQuaternionFromRotationMatrix(R);
   
   return 1;
 }

@@ -30,8 +30,14 @@ void formA(double pos2D[8], double posRef[8], double Aout[8][8]) {
     Aout[2 * i][0] = posRef[2 * i];
     Aout[2 * i][1] = posRef[2 * i + 1];
     Aout[2 * i][2] = 1;
+    Aout[2 * i][3] = 0;
+    Aout[2 * i][4] = 0;
+    Aout[2 * i][5] = 0;
     Aout[2 * i][6] = -posRef[2 * i] * pos2D[2 * i];
     Aout[2 * i][7] = -posRef[2 * i + 1] * pos2D[2 * i];
+    Aout[2 * i + 1][0] = 0;
+    Aout[2 * i + 1][1] = 0;
+    Aout[2 * i + 1][2] = 0;
     Aout[2 * i + 1][3] = posRef[2 * i];
     Aout[2 * i + 1][4] = posRef[2 * i + 1];
     Aout[2 * i + 1][5] = 1;
@@ -91,7 +97,9 @@ void getRtFromH(double h[8], double ROut[3][3], double pos3DOut[3]) {
  * TODO: see header file for documentation
  */
 Quaternion getQuaternionFromRotationMatrix(double R[3][3]) {
-
-  return Quaternion();
-
+  double qW = sqrt(1 + R[0][0] + R[1][1] + R[2][2]) / 2;
+  double qX = (R[2][1] - R[1][2]) / (4 * qW);
+  double qY = (R[0][2] - R[2][0]) / (4 * qW);
+  double qZ = (R[1][0] - R[0][1]) / (4 * qW);
+  return Quaternion(qW, qX, qY, qZ);
 }
