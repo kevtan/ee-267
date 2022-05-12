@@ -5,10 +5,21 @@
  */
 void convertTicksTo2DPositions(uint32_t clockTicks[8], double pos2D[8])
 {
-  //use variable CLOCKS_PER_SECOND defined in PoseMath.h
-  //for number of clock ticks a second
+  // Compute relative times between sync pulse and sweeps
+  double relativeTimes[8];
+  for (int i = 0; i < 8; i++)
+    relativeTimes[i] = ((double) clockTicks[i]) / CLOCKS_PER_SECOND;
+  
+  // Compute horizontal and vertical angles (in degrees)
+  double angles[8];
+  for (int i = 0; i < 8; i += 2)  // horizontal
+    angles[i] = -relativeTimes[i] * 60 * 360 + 90;
+  for (int i = 1; i < 8; i += 2)  // vertical
+    angles[i] = relativeTimes[i] * 60 * 360 - 90;
 
-
+  // Compute 2D normalized coordinates
+  for (int i = 0; i < 8; i++)
+    pos2D[i] = tan(radians(angles[i]));
 }
 
 /**

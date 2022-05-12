@@ -81,10 +81,7 @@ int PoseTracker::updatePose() {
   //
   // return 0 if errors occur, return 1 if successful
 
+  convertTicksTo2DPositions(clockTicks, position2D);
 
-
-
-
-  return 0;
-
+  return 1;
 }
