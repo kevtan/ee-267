@@ -26,9 +26,18 @@ void convertTicksTo2DPositions(uint32_t clockTicks[8], double pos2D[8])
  * TODO: see header file for documentation
  */
 void formA(double pos2D[8], double posRef[8], double Aout[8][8]) {
-
-
-
+  for (int i = 0; i < 4; i++) {
+    Aout[2 * i][0] = posRef[2 * i];
+    Aout[2 * i][1] = posRef[2 * i + 1];
+    Aout[2 * i][2] = 1;
+    Aout[2 * i][6] = -posRef[2 * i] * pos2D[2 * i];
+    Aout[2 * i][7] = -posRef[2 * i + 1] * pos2D[2 * i];
+    Aout[2 * i + 1][3] = posRef[2 * i];
+    Aout[2 * i + 1][4] = posRef[2 * i + 1];
+    Aout[2 * i + 1][5] = 1;
+    Aout[2 * i + 1][6] = -posRef[2 * i] * pos2D[2 * i + 1];
+    Aout[2 * i + 1][7] = -posRef[2 * i + 1] * pos2D[2 * i + 1];
+  }
 }
 
 
